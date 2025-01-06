@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -34,10 +35,12 @@ fun NewsCard(
     author: String,
     date: String,
     image: String,
-    onClick: () -> Unit) {
+    onClick: () -> Unit
+) {
     val cardHeight = 170.dp
 
     Card(
+        shape = RectangleShape,
         modifier = Modifier
             .fillMaxWidth()
             .padding(10.dp)
@@ -59,18 +62,13 @@ fun NewsCard(
                     .fillMaxSize()
                     .height(cardHeight)
                     .background(
-                        Brush.linearGradient(
-                            colors = listOf(
-                                Color(0xFF032E4D),
-                                Blue40.copy(alpha = 0.9f),
-                                LighterBlue40.copy(alpha = 0.8f),
-                                LightBlue80.copy(alpha = 0.5f),
-                            )
-                        )
+                        LighterBlue40.copy(alpha = 0.8f),
                     )
             ) {
                 Column(
-                    modifier = Modifier.fillMaxHeight().padding(15.dp),
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .padding(15.dp),
                     verticalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(

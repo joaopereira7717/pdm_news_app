@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -39,7 +40,7 @@ fun Pill(
         modifier = Modifier
             .background(
                 color = if (isSelected) LightBlue80.copy(.5f) else Blue40,
-                shape = RoundedCornerShape(10.dp)
+                shape = RectangleShape
             )
             .padding(10.dp)
             .clickable { onClick() }

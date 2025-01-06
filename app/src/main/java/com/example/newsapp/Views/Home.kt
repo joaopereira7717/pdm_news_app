@@ -2,10 +2,12 @@ package com.example.newsapp.Views
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -19,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -114,22 +117,56 @@ fun HomeScreen(context: MainActivity, navigation: NavHostController) {
         selectedPill.value = pill
     }
 
-    Column {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Image(
-                painter = painterResource(id = R.mipmap.img),
-                contentDescription = "App logo",
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Image(
+                    painter = painterResource(id = R.mipmap.img),
+                    contentDescription = "App logo",
+                    modifier = Modifier
+                        .width(90.dp),
+                    contentScale = ContentScale.Fit,
+                )
+            }
+
+            if (data.size == 0 && !isLoading.value) {
+                NoDataListState()
+            }
+
+            if (data.size == 0 && isLoading.value) {
+                LoadingListState()
+            }
+
+            val screenHeight = LocalConfiguration.current.screenHeightDp.dp
+            LazyColumn(
                 modifier = Modifier
-                    .width(90.dp)
-                    .padding(vertical = 10.dp),
-                contentScale = ContentScale.Fit,
+                    .fillMaxWidth()
+                    .height(screenHeight * 0.8f),
+                content = {
+                    items(data.size) { index ->
+                        NewsCard(
+                            title = data[index].title ?: "",
+                            author = data[index].author ?: "",
+                            image = data[index].urlToImage ?: "",
+                            date = data[index].publishedAt ?: "",
+                            onClick = {
+                                val url: String = URLEncoder.encode(data[index].url)
+                                val title: String = URLEncoder.encode(data[index].title)
+                                navigation.navigate("article/$url/$title")
+                            }
+                        )
+                    }
+                }
             )
         }
+
         HorizontalScrollable(
-            modifier = Modifier.padding(bottom = 10.dp),
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 10.dp),
             content = {
                 pills.forEach { pill ->
                     Pill(
@@ -140,32 +177,6 @@ fun HomeScreen(context: MainActivity, navigation: NavHostController) {
                     )
                 }
             },
-        )
-
-        if (data.size == 0 && !isLoading.value) {
-            NoDataListState()
-        }
-
-        if (data.size == 0 && isLoading.value) {
-            LoadingListState()
-        }
-
-        LazyColumn(
-            content = {
-                items(data.size) { index ->
-                    NewsCard(
-                        title = data[index].title ?: "",
-                        author = data[index].author ?: "",
-                        image = data[index].urlToImage ?: "",
-                        date = data[index].publishedAt ?: "",
-                        onClick = {
-                            val url: String = URLEncoder.encode(data[index].url)
-                            val title: String = URLEncoder.encode(data[index].title)
-                            navigation.navigate("article/$url/$title")
-                        }
-                    )
-                }
-            }
         )
     }
 }
